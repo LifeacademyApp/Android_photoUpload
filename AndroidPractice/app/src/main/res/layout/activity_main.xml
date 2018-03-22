@@ -8,18 +8,24 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="377dp"
+        android:layout_height="172dp"
+        android:layout_marginTop="32dp"
         android:onClick="onGet"
-        android:text="Button"
-        tools:layout_editor_absoluteX="3dp"
-        tools:layout_editor_absoluteY="2dp" />
+        android:text="拍照"
+        android:textSize="36sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="3dp" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="376dp"
-        android:layout_height="444dp"
-        android:scaleType="centerInside"
-        tools:layout_editor_absoluteX="3dp"
-        tools:layout_editor_absoluteY="68dp" />
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="364dp"
+        android:layout_height="182dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="8dp"
+        android:text="瀏覽/上傳照片"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </android.support.constraint.ConstraintLayout>
