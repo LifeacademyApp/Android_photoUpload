@@ -1,29 +1,23 @@
 package com.example.yolo.androidpractice;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.os.Environment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
-
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.content.Intent;
-import android.util.Log;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.net.Uri;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import android.support.v4.content.FileProvider;
 
 public class MainActivity extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 1;
@@ -124,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
             String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
             String fname = "p" + System.currentTimeMillis() + ".jpg";
             mCurrentPhotoPath = dir + "/" + fname;
+//            File photoFile = null;
             File photoFile = new File(mCurrentPhotoPath);
 
 //            try {
@@ -136,6 +131,9 @@ public class MainActivity extends AppCompatActivity {
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.fileprovider",
                         photoFile);
+
+
+                //Uri photoURI = Uri.fromFile(photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 // 確認一下 在哪行程式碼創建了檔案的，並試試看原本非 provider 的
                 // 方法是否也會創建空的檔案
