@@ -19,13 +19,18 @@
 
     <Button
         android:id="@+id/button2"
-        android:layout_width="364dp"
-        android:layout_height="182dp"
+        android:layout_width="370dp"
+        android:layout_height="181dp"
         android:layout_marginBottom="32dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="94dp"
+        android:onClick="browsePic"
         android:text="瀏覽/上傳照片"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
 </android.support.constraint.ConstraintLayout>

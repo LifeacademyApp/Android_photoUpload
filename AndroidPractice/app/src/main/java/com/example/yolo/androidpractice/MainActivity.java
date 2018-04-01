@@ -9,20 +9,19 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.support.v4.print.PrintHelper;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 1;
     String mCurrentPhotoPath;
-    Uri imgUri;
     ImageView imv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void onGet(View v){
         dispatchTakePictureIntent();
-
-
-      //  Log.v("yooooooo","tesettest");
-//        String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-//        String fname = "p" + System.currentTimeMillis() + ".jpg";
-//        imgUri = Uri.parse("file://" + dir + "/" + fname);
-//
-//
-//        Intent it = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        it.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
-//        startActivityForResult(it, REQUEST_TAKE_PHOTO);
     }
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -57,13 +45,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == Activity.RESULT_OK && requestCode == REQUEST_TAKE_PHOTO){
-           // showImg();
-            galleryAddPic();                // 通知系統有新的照片
-            dispatchTakePictureIntent();
+        if(resultCode == Activity.RESULT_OK ){
+            if(requestCode == REQUEST_TAKE_PHOTO){
+                // showImg();
+                galleryAddPic();                // 通知系統有新的照片
+                dispatchTakePictureIntent();
+            }
+            else{
+                Toast.makeText(this, "RESULT_OK", Toast.LENGTH_LONG).show();
+            }
         }
         else{
-            Toast.makeText(this, "取消拍照", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "RESULT_CANCEL", Toast.LENGTH_LONG).show();
         }
     }
     void showImg(){
@@ -86,28 +79,23 @@ public class MainActivity extends AppCompatActivity {
         Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoPath, option);
         imv.setImageBitmap(bmp);
     }
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        //File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-
-        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) ;
-        // Log.d("MainActivity", "Environment.DIRECTORY_PICTURES");
-        // 建出暫存檔
-        //File.
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
+//    private File createImageFile() throws IOException {
+//        // Create an image file name
+//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//        String imageFileName = "JPEG_" + timeStamp + "_";
+//
+//        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) ;
+//
+//        File image = File.createTempFile(
+//                imageFileName,  /* prefix */
+//                ".jpg",         /* suffix */
+//                storageDir      /* directory */
+//        );
+//
+//        // Save a file: path for use with ACTION_VIEW intents
+//        mCurrentPhotoPath = image.getAbsolutePath();
+//        return image;
+//    }
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -115,31 +103,89 @@ public class MainActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
             //File photoFile = null;
-            String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+            String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/PhotoUploader";
+            //? String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+            Log.d("####Path",Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString());
             String fname = "p" + System.currentTimeMillis() + ".jpg";
             mCurrentPhotoPath = dir + "/" + fname;
-//            File photoFile = null;
             File photoFile = new File(mCurrentPhotoPath);
 
-//            try {
-//                photoFile = createImageFile();
-//            } catch (IOException ex) {
-//                // Error occurred while creating the File
-//            }
             // Continue only if the File was successfully created
             if (photoFile != null) {
+                // also need to add provider in AndroidMainifest
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.fileprovider",
                         photoFile);
 
-
-                //Uri photoURI = Uri.fromFile(photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                // 確認一下 在哪行程式碼創建了檔案的，並試試看原本非 provider 的
-                // 方法是否也會創建空的檔案
+
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
+
+            // Check whether PhotoUploader exist
+            //String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+            File photoDir = new File(dir);
+            if (!photoDir.isDirectory()) {
+                photoDir.mkdirs();
+            }
         }
+
+    }
+
+    public void Browse2(View v)
+    {
+        Intent browseIt = new Intent(Intent.ACTION_PICK);
+        //Intent browseIt = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        browseIt.setType("image/*");
+        startActivityForResult(browseIt, 101);
+    }
+    public void Browse1(View v)
+    {
+        Intent browseIt = new Intent(Intent.ACTION_GET_CONTENT);
+        browseIt.setType("image/*");
+        startActivityForResult(browseIt, 101);
+    }
+    //? 分享
+    public void send(View v)
+    {
+        Intent sendIt = new Intent(Intent.ACTION_SEND);
+        sendIt.setType("image/*");
+        startActivity(sendIt);
+    }
+
+
+
+
+    //? Gallery activity
+    public void browsePicxxx(View v) {
+        startActivity(new Intent(this, Gallery.class));
+    }
+
+    //? 印圖
+    public void Browsexxx(View v) {
+        PrintHelper photoPrinter = new PrintHelper(this);
+        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+                R.drawable.img1);
+        photoPrinter.printBitmap("droids.jpg - test print", bitmap);
+    }
+
+    //
+    public void browsePic(View v) {
+        ArrayList<String> photosNames = new ArrayList<>();
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/PhotoUploader";
+
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        //? Log.d("Files", "Size: "+ files.length);
+        for (int i = 0; i < files.length; i++)
+        {
+            photosNames.add(files[i].getName());
+           //? Log.d("Files", "FileName:" + files[i].getName());
+        }
+        Intent toGallery = new Intent(this, Gallery.class);
+        toGallery.putExtra("photoNames", photosNames);
+        startActivity(toGallery);
     }
 
 }
