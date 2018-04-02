@@ -2,8 +2,6 @@ package com.example.yolo.androidpractice;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,11 +21,18 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 1;
     String mCurrentPhotoPath;
     ImageView imv;
+
+    String dirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/PhotoUploader";
+    File photoDir;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //imv = (ImageView) findViewById(R.id.imageView);
+
+        photoDir = new File(dirPath);
+        if (!photoDir.isDirectory()) {
+            photoDir.mkdirs();
+        }
     }
 
     public void onGet(View v){
@@ -56,29 +61,29 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         else{
-            Toast.makeText(this, "RESULT_CANCEL", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "結束拍照", Toast.LENGTH_LONG).show();
         }
     }
-    void showImg(){
-        int iw, ih, vw, vh;
-
-        BitmapFactory.Options option = new BitmapFactory.Options();
-        option.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, option);
-        iw = option.outWidth;
-        ih = option.outHeight;
-
-        vw = imv.getWidth();
-        vh = imv.getHeight();
-
-        int scaleFactor = Math.min(iw/vw, ih/vh);
-
-        option.inJustDecodeBounds = false;
-        option.inSampleSize = scaleFactor;
-
-        Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoPath, option);
-        imv.setImageBitmap(bmp);
-    }
+//    void showImg(){
+//        int iw, ih, vw, vh;
+//
+//        BitmapFactory.Options option = new BitmapFactory.Options();
+//        option.inJustDecodeBounds = true;
+//        BitmapFactory.decodeFile(mCurrentPhotoPath, option);
+//        iw = option.outWidth;
+//        ih = option.outHeight;
+//
+//        vw = imv.getWidth();
+//        vh = imv.getHeight();
+//
+//        int scaleFactor = Math.min(iw/vw, ih/vh);
+//
+//        option.inJustDecodeBounds = false;
+//        option.inSampleSize = scaleFactor;
+//
+//        Bitmap bmp = BitmapFactory.decodeFile(mCurrentPhotoPath, option);
+//        imv.setImageBitmap(bmp);
+//    }
 //    private File createImageFile() throws IOException {
 //        // Create an image file name
 //        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -103,11 +108,11 @@ public class MainActivity extends AppCompatActivity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
             //File photoFile = null;
-            String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/PhotoUploader";
+            dirPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/PhotoUploader";
             //? String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
             Log.d("####Path",Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString());
             String fname = "p" + System.currentTimeMillis() + ".jpg";
-            mCurrentPhotoPath = dir + "/" + fname;
+            mCurrentPhotoPath = dirPath + "/" + fname;
             File photoFile = new File(mCurrentPhotoPath);
 
             // Continue only if the File was successfully created
@@ -124,10 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Check whether PhotoUploader exist
             //String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-            File photoDir = new File(dir);
-            if (!photoDir.isDirectory()) {
-                photoDir.mkdirs();
-            }
+
         }
 
     }
@@ -165,19 +167,17 @@ public class MainActivity extends AppCompatActivity {
     public void Browsexxx(View v) {
         PrintHelper photoPrinter = new PrintHelper(this);
         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.img1);
-        photoPrinter.printBitmap("droids.jpg - test print", bitmap);
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img1);
+//        photoPrinter.printBitmap("droids.jpg - test print", bitmap);
     }
-
     //
     public void browsePic(View v) {
         ArrayList<String> photosNames = new ArrayList<>();
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString() + "/PhotoUploader";
 
-        File directory = new File(path);
-        File[] files = directory.listFiles();
-        //? Log.d("Files", "Size: "+ files.length);
+        File[] files = photoDir.listFiles();
+
+        // !!!! remember ask android permission about storage
+
         for (int i = 0; i < files.length; i++)
         {
             photosNames.add(files[i].getName());
@@ -187,5 +187,4 @@ public class MainActivity extends AppCompatActivity {
         toGallery.putExtra("photoNames", photosNames);
         startActivity(toGallery);
     }
-
 }

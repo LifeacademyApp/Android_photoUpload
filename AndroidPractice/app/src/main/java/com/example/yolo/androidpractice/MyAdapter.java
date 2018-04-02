@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -39,7 +40,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         }
 
         @Override
-        public void onBindViewHolder(MyAdapter.ViewHolder viewHolder, int i) {
+        public void onBindViewHolder(MyAdapter.ViewHolder viewHolder, final int i) {
             viewHolder.img.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             // Get the dimensions of the View
@@ -66,6 +67,20 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
             Bitmap bitmap = BitmapFactory.decodeFile(imgUri.getPath(), bmOptions);
             viewHolder.img.setImageBitmap(bitmap);
 
+
+            viewHolder.img.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context,"Image",Toast.LENGTH_SHORT).show();
+                }
+            });
+            viewHolder.img.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    Toast.makeText(context,"longlong" + i,Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
         }
 //        public void onBindViewHolder(MyAdapter.ViewHolder viewHolder, int i) {
 ////            viewHolder.title.setText(galleryList.get(i).getImage_title());
