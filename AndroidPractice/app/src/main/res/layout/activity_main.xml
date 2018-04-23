@@ -28,9 +28,18 @@
         android:onClick="browsePic"
         android:text="瀏覽/上傳照片"
         android:textSize="30sp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="44dp"
+        tools:layout_editor_absoluteY="230dp" />
 
 </android.support.constraint.ConstraintLayout>
