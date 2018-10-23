@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,14 +36,14 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         public MyAdapter(Context context, ArrayList<String> photoNameList) {
             this.photoNameList = photoNameList;
             this.context = context;
-            Log.w("###context", context.toString());
+            //Log.w("###context", context.toString());
         }
 
         //? 有幾張圖就會跑幾次
         @Override
         public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell_layout, viewGroup, false);
-            Log.w("###ViewGroup", viewGroup.toString());
+            //Log.w("###ViewGroup", viewGroup.toString());
 
             MyAdapter.ViewHolder tmpHolder = new ViewHolder(view);
             if(isSelectAll){
@@ -58,28 +57,19 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         public void onBindViewHolder(final MyAdapter.ViewHolder viewHolder, final int i) {
             viewHolder.img.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            // Get the dimensions of the View
-            int targetW = viewHolder.img.getWidth();
-            int targetH = viewHolder.img.getHeight();
 
             Uri imgUri = Uri.parse(photoDir + "/" + photoNameList.get(i));
 
-            // Get the dimensions of the bitmap
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            bmOptions.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(imgUri.getPath(), bmOptions);
-            int photoW = bmOptions.outWidth;
-            int photoH = bmOptions.outHeight;
 
-            // Determine how much to scale down the image
-//            int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-            int scaleFactor = 2;
+            int scaleFactor = 4;
             // Decode the image file into a Bitmap sized to fill the View
             bmOptions.inJustDecodeBounds = false;
             bmOptions.inSampleSize = scaleFactor;
-            bmOptions.inPurgeable = true;
+
 
             Bitmap bitmap = BitmapFactory.decodeFile(imgUri.getPath(), bmOptions);
+            //Bitmap bitmap = BitmapFactory.decodeFile(imgUri.getPath());
             viewHolder.img.setImageBitmap(bitmap);
 
 

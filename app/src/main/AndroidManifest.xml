@@ -32,16 +32,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!--for link from web page-->
             <intent-filter>
-
-                <!-- <action android:name="com.google.zxing.client.android.SCAN" /> -->
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="usccbarcodescanner" />
+                <data android:scheme="usccbarcodescanner"/>
             </intent-filter>
+
         </activity>
         <activity android:name=".Gallery"></activity>
     </application>

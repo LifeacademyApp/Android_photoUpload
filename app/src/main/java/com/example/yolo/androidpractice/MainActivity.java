@@ -11,7 +11,6 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v4.print.PrintHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -41,7 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
         // check if the permission is granted
         permissionCheckAsk();
+
+
     }
+
+    //?-----------------------------?//
 
     public void onGet(View v){
         dispatchTakePictureIntent();
@@ -132,6 +135,8 @@ public class MainActivity extends AppCompatActivity {
 //        return image;
 //    }
 
+
+
     private void dispatchTakePictureIntent() {
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED )
@@ -184,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Intent toGallery = new Intent(this, Gallery.class);
         toGallery.putExtra("photoNames", photosNames);
+        toGallery.putExtra("parameterFromWeb", this.getIntent().getData());
         startActivity(toGallery);
     }
     private void permissionCheckAsk(){
@@ -195,42 +201,29 @@ public class MainActivity extends AppCompatActivity {
                     REQUEST_WRITE_EXTERNAL_STORAGE);
         }
     }
-    public void Browse2(View v)
-    {
-        Intent browseIt = new Intent(Intent.ACTION_PICK);
-        //Intent browseIt = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        browseIt.setType("image/*");
-        startActivityForResult(browseIt, 101);
-    }
-    public void Browse1(View v)
-    {
-        Intent browseIt = new Intent(Intent.ACTION_GET_CONTENT);
-        browseIt.setType("image/*");
-        startActivityForResult(browseIt, 101);
-    }
-    //? 分享
-    public void send(View v)
-    {
-        Intent sendIt = new Intent(Intent.ACTION_SEND);
-        sendIt.setType("image/*");
-        startActivity(sendIt);
-    }
 
 
 
-
-    //? Gallery activity
-    public void browsePicxxx(View v) {
-        startActivity(new Intent(this, Gallery.class));
-    }
-
-    //? 印圖
-    public void Browsexxx(View v) {
-        PrintHelper photoPrinter = new PrintHelper(this);
-        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img1);
-//        photoPrinter.printBitmap("droids.jpg - test print", bitmap);
-    }
-    //
+//    public void Browse2(View v)
+//    {
+//        Intent browseIt = new Intent(Intent.ACTION_PICK);
+//        //Intent browseIt = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        browseIt.setType("image/*");
+//        startActivityForResult(browseIt, 101);
+//    }
+//    public void Browse1(View v)
+//    {
+//        Intent browseIt = new Intent(Intent.ACTION_GET_CONTENT);
+//        browseIt.setType("image/*");
+//        startActivityForResult(browseIt, 101);
+//    }
+//
+//    //? 分享
+//    public void send(View v)
+//    {
+//        Intent sendIt = new Intent(Intent.ACTION_SEND);
+//        sendIt.setType("image/*");
+//        startActivity(sendIt);
+//    }
 
 }
